@@ -1,53 +1,30 @@
 endpoints:
-  - name: front-end
-    group: core
-    url: "https://twin.sh/health"
-    interval: 5m
-    conditions:
-      - "[STATUS] == 200"
-      - "[BODY].status == UP"
-      - "[RESPONSE_TIME] < 150"
-
-  - name: back-end
-    group: core
-    url: "https://example.org/"
-    interval: 5m
-    conditions:
-      - "[STATUS] == 200"
-      - "[CERTIFICATE_EXPIRATION] > 48h"
-
-  - name: monitoring
-    group: internal
-    url: "https://example.org/"
-    interval: 5m
-    conditions:
-      - "[STATUS] == 200"
-
-  - name: nas
-    group: internal
-    url: "https://example.org/"
-    interval: 5m
-    conditions:
-      - "[STATUS] == 200"
-
-  - name: example-dns-query
-    url: "8.8.8.8" # Address of the DNS server to use
-    interval: 5m
-    dns:
-      query-name: "example.com"
-      query-type: "A"
-    conditions:
-      - "[BODY] == 93.184.215.14"
-      - "[DNS_RCODE] == NOERROR"
-
-  - name: icmp-ping
-    url: "icmp://example.org"
+  # Basic HTTP Check with Status Code & Response Time
+  - name: dataclap-homepage
+    url: "https://www.dataclap.digital/"
     interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 500"
+
+  # SSL Certificate Expiration Check
+  - name: dataclap-ssl
+    url: "https://www.dataclap.digital/"
+    interval: 12h
+    conditions:
+      - "[CERTIFICATE_EXPIRATION] > 7d"
+
+  # ICMP Ping Check (Only works if the server allows ping)
+  - name: dataclap-ping
+    url: "icmp://www.dataclap.digital"
+    interval: 5m
     conditions:
       - "[CONNECTED] == true"
 
-  - name: check-domain-expiration
-    url: "https://example.org/"
-    interval: 1h
+  # API or Specific Page Check (if applicable)
+  - name: dataclap-api
+    url: "https://www.dataclap.digital/api/status"
+    interval: 2m
     conditions:
-      - "[DOMAIN_EXPIRATION] > 720h"
+      - "[STATUS] == 200"
+      - "[BODY].service == 'healthy'"
