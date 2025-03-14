@@ -141,7 +141,7 @@ A sign you may want to look into Gatus is by simply asking yourself whether you'
 was to go down right now. Will any of your existing alerts be triggered? Your metrics won’t report an increase in errors
 if no traffic makes it to your applications. This puts you in a situation where your clients are the ones
 that will notify you about the degradation of your services rather than you reassuring them that you're working on
-fixing the issue before they even know about it.
+fixing the issue before they even know about it..
 
 
 ## Features
