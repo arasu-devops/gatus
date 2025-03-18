@@ -8,11 +8,11 @@ variables:
 - group: CICD-Demo-var-group  # Link the variable group
 
 steps:
-# 1️⃣ Checkout Code from GitHub
+#  Checkout Code from GitHub
 - checkout: self
   displayName: "Checkout GitHub repository"
 
-# 2️⃣ Login to Docker Hub
+#  Login to Docker Hub
 - script: |
     set -e  # Stop script if any command fails
     echo "Logging in to Docker Hub..."
@@ -20,7 +20,7 @@ steps:
     docker info  # Verify login success
   displayName: "Login to Docker Hub"
 
-# 3️⃣ Build Docker Image
+#  Build Docker Image
 - script: |
     set -e
     echo "Building the Docker image..."
@@ -28,7 +28,7 @@ steps:
     docker images
   displayName: "Build Docker Image"
 
-# 4️⃣ Push Image to Docker Hub
+#  Push Image to Docker Hub
 - script: |
     set -e
     echo "Tagging and pushing to Docker Hub..."
