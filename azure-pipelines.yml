@@ -14,6 +14,7 @@ steps:
 
 # 2️⃣ Login to Docker Hub
 - script: |
+    set -e  # Stop script if any command fails
     echo "Logging in to Docker Hub..."
     echo $(DOCKER_PASSWORD) | docker login -u arasu35 --password-stdin
     docker info  # Verify login success
@@ -21,6 +22,7 @@ steps:
 
 # 3️⃣ Build Docker Image
 - script: |
+    set -e
     echo "Building the Docker image..."
     docker build -t arasu35/gatus:latest -f ./Dockerfile .
     docker images
@@ -28,7 +30,7 @@ steps:
 
 # 4️⃣ Push Image to Docker Hub
 - script: |
+    set -e
     echo "Tagging and pushing to Docker Hub..."
-    docker tag arasu35/gatus:latest arasu35/gatus:latest
     docker push arasu35/gatus:latest
   displayName: "Push Docker Image to Docker Hub"
