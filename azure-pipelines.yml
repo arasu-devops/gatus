@@ -27,6 +27,12 @@ steps:
 - script: |
     set -e
     echo "Building the Docker image..."
-    docker build -t arasu35/gatus:latest -f ./Dockerfile .
+    docker build -t arasu35/gatus-azure:latest -f ./Dockerfile .
     docker images
   displayName: "Build Docker Image"
+
+#  Push Image to Docker Hub
+- script: |
+    echo "Tagging and pushing to Docker Hub..."
+    docker push arasu35/gatus-azure:latest
+  displayName: "Push Docker Image to Docker Hub"
