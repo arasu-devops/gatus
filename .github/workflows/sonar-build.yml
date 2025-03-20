@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - Azure-main
 
 
 jobs:
