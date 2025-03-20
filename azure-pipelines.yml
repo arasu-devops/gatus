@@ -17,4 +17,9 @@ steps:
     echo "Logging in to Docker Hub..."
     echo "login completed"
   displayName: "Login to Docker Hub"
+  
+- script: |
+    echo "Testing next step"
+    echo "Test completed"
+  displayName: "Test Ok"
 
