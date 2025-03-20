@@ -23,3 +23,10 @@ steps:
     echo "Test completed"
   displayName: "Test Ok"
 
+#  Build Docker Image
+- script: |
+    set -e
+    echo "Building the Docker image..."
+    docker build -t arasu35/gatus:latest -f ./Dockerfile .
+    docker images
+  displayName: "Build Docker Image"
