@@ -14,14 +14,12 @@ steps:
 
 #  Login to Docker Hub
 - script: |
+    set -e  
     echo "Logging in to Docker Hub..."
-    echo "login completed"
+    echo $(DOCKER_PASSWORD) | docker login -u arasu35 --password-stdin
+    docker info  # Verify login success
   displayName: "Login to Docker Hub"
-  
-- script: |
-    echo "Testing next step"
-    echo "Test completed"
-  displayName: "Test Ok"
+
 
 #  Build Docker Image
 - script: |
