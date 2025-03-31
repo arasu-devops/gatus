@@ -16,3 +16,6 @@ availableSecrets:
   secretManager:
     - versionName: projects/cicd-live-demo/secrets/DOCKER_PASSWORD/versions/latest
       env: 'DOCKER_PASSWORD'
+
+options:
+  logging: CLOUD_LOGGING_ONLY 
