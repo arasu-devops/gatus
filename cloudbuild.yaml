@@ -1,7 +1,10 @@
 steps:
   # Login to Docker Hub
-  - name: 'docker'
-    args: ['login', '-u', 'arasu35', '--password-stdin']
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - 'echo $$DOCKER_PASSWORD | docker login -u arasu35 --password-stdin'
     secretEnv: ['DOCKER_PASSWORD']
 
   #  Build the Docker Image
@@ -18,4 +21,4 @@ availableSecrets:
       env: 'DOCKER_PASSWORD'
 
 options:
-  logging: CLOUD_LOGGING_ONLY 
+  logging: CLOUD_LOGGING_ONLY
