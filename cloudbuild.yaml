@@ -1,0 +1,18 @@
+steps:
+  # Login to Docker Hub
+  - name: 'docker'
+    args: ['login', '-u', 'arasu35', '--password-stdin']
+    secretEnv: ['DOCKER_PASSWORD']
+
+  #  Build the Docker Image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'arasu35/gatus:latest', '.']
+
+  #  Push the Image to Docker Hub
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'arasu35/gatus:latest']
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/cicd-live-demo/secrets/DOCKER_PASSWORD/versions/latest
+      env: 'DOCKER_PASSWORD'
