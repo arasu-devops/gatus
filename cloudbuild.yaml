@@ -9,11 +9,11 @@ steps:
 
   #  Build the Docker Image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'arasu35/gatus:latest', '.']
+    args: ['build', '-t', 'arasu35/gatus-gcp:latest', '.']
 
   #  Push the Image to Docker Hub
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'arasu35/gatus:latest']
+    args: ['push', 'arasu35/gatus-gcp:latest']
 
 availableSecrets:
   secretManager:
