@@ -1,5 +1,5 @@
 steps:
-  # Login to Docker Hub
+  # 1. Login to Docker Hub
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:
@@ -7,18 +7,28 @@ steps:
       - 'echo $$DOCKER_PASSWORD | docker login -u arasu35 --password-stdin'
     secretEnv: ['DOCKER_PASSWORD']
 
-  #  Build the Docker Image
+  # 2. Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'arasu35/gatus-gcp:latest', '.']
 
-  #  Push the Image to Docker Hub
+  # 3. Push the image to Docker Hub
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'arasu35/gatus-gcp:latest']
 
-availableSecrets:
-  secretManager:
-    - versionName: projects/cicd-live-demo/secrets/DOCKER_PASSWORD/versions/latest
-      env: 'DOCKER_PASSWORD'
-
-options:
-  logging: CLOUD_LOGGING_ONLY
+  # 4. SSH into the GCP VM to pull image, scan with Trivy, and deploy
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud compute ssh dataclaptech@instance-20250408-070210 \
+          --zone=us-central1-c \
+          --command='
+            docker pull arasu35/gatus-gcp:latest &&
+            docker run --rm -v /home/dataclaptech/nginx/html:/output aquasec/trivy image \
+              --format template --template "@contrib/html.tpl" \
+              -o /output/trivy-report.html arasu35/gatus-gcp:latest &&
+            docker stop gatus || true &&
+            docker rm gatus || true &&
+            docker run -d --name gatus -p 8081:8080 arasu35/gatus-gcp:latest
+          '
