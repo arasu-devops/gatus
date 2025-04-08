@@ -32,3 +32,7 @@ steps:
             docker rm gatus || true &&
             docker run -d --name gatus -p 8081:8080 arasu35/gatus-gcp:latest
           '
+        
+options:
+  logging: CLOUD_LOGGING_ONLY
+
