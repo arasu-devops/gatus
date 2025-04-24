@@ -1,1 +1,1 @@
-main.
+bug has been injected in gcp-gatus code.
