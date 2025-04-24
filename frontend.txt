@@ -1,1 +1,1 @@
-bug has been injected in gcp-gatus code.
+rollback with main code in gcp-gatus.
