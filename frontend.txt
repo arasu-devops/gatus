@@ -1,1 +1,1 @@
-rollback with main code in gcp-gatus.
+vulnerability injected in docker image of gcp.
