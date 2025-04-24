@@ -1,1 +1,1 @@
-vulnerability injected in docker image of gcp.
+rollback with main docker image of gcp.
