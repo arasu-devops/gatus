@@ -1,0 +1,71 @@
+trigger:
+- Azure-main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: CICD-Demo-var-group  # Link the variable group
+
+steps:
+#  Checkout Code from GitHub
+- checkout: self
+  displayName: "Checkout GitHub repository"
+
+#  Login to Docker Hub
+- script: |
+    set -e  
+    echo "Logging in to Docker Hub..."
+    echo $(DOCKER_PASSWORD) | docker login -u arasu35 --password-stdin
+    docker info  # Verify login success
+  displayName: "Login to Docker Hub"
+
+
+#  Build Docker Image
+- script: |
+    set -e
+    echo "Building the Docker image..."
+    docker build -t arasu35/gatus-azure:latest -f ./Dockerfile .
+    docker images
+  displayName: "Build Docker Image"
+
+#  Push Image to Docker Hub
+- script: |
+    echo "Tagging and pushing to Docker Hub..."
+    docker push arasu35/gatus-azure:latest
+  displayName: "Push Docker Image to Docker Hub"
+
+# Run Trivy Scan and Generate HTML Report
+- script: |
+    set -e
+    echo "Downloading Trivy HTML template..."
+    wget -O html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl
+
+    echo "Running Trivy scan..."
+    docker pull aquasec/trivy
+    docker run --rm \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      -v $(Build.ArtifactStagingDirectory):/output \
+      -v $(pwd):/template \
+      aquasec/trivy image \
+      --format template --template "@/template/html.tpl" \
+      -o /output/trivy-report.html arasu35/gatus-azure:latest
+  displayName: "Run Trivy Scan"
+  
+
+# Copy Report to VM via Azure VM Extension
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: "CICD-Demo-Service-Connection"
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az vm run-command invoke \
+        --resource-group CICD-demo-vm_group \
+        --name CICD-demo-vm \
+        --command-id RunShellScript \
+        --scripts "echo 'Copying Trivy report to VM...'" \
+        "mkdir -p /home/azureuser/nginx/html" \
+        "cp '$(Build.ArtifactStagingDirectory)/trivy-report.html' > /home/azureuser/nginx/html/trivy-report.html"
+  displayName: "Copy Trivy Report to VM"
+
