@@ -1,5 +1,4 @@
-web:
-  base-path: /gatus 
+
 endpoints:
   # Basic HTTP Check with Status Code & Response Time
   - name: dataclap-homepage
